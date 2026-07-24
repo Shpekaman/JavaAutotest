@@ -91,10 +91,10 @@ public class TestMain {
         int number = random.nextInt(-5,5);
         String expected;
         if(number<0){
-            expected="Мы принимаем только положительные числа";
+            expected="?? ????????? ?????? ????????????? ?????";
         }
         else if(number==0){
-            expected="Поехали!";
+            expected="???????!";
         }else {
             StringBuilder result = new StringBuilder();
             for (int i = number; i >= 1; i--) {
@@ -103,7 +103,7 @@ public class TestMain {
                     result.append(" ");
                 }
             }
-            result.append(" Поехали!");
+            result.append(" ???????!");
             expected=result.toString();
         }
         String actual = Main.blastOff(number);
@@ -133,7 +133,7 @@ public class TestMain {
         assertEquals(expected,actual);
     }
 
-    //Для рандома в testHasBug и для testReverse
+    //??? ??????? ? testHasBug ? ??? testReverse
     public static String[] generateRandomMessages(int size){
         String[]possibleMessages = {"Bug","Fix","Feature","Hello","Test","Bububu","Tututu"};
 
@@ -144,7 +144,7 @@ public class TestMain {
         }
         return messages;
     }
-    //Для проверки на слово Bug в рандоме
+    //??? ???????? ?? ????? Bug ? ???????
     private boolean containsBug(String[] messages){
         for(String msg:messages){
             if("Bug".equals(msg)) return true;
@@ -175,7 +175,7 @@ public class TestMain {
         System.out.println(result);
     }
 
-    //Для рандома testFindMax
+    //??? ??????? testFindMax
     private int[] generateRandomArray(int size){
 
         int[] arr = new int[size];
@@ -184,7 +184,7 @@ public class TestMain {
         }
         return arr;
     }
-    //Для вычисления Max в Find Max
+    //??? ?????????? Max ? Find Max
     private int calculateMax(int []arr){
         int max = arr[0];
         for(int i=1;i< arr.length;i++){
@@ -204,7 +204,7 @@ public class TestMain {
             fail("Max mismatch");
         }
     }
-    //Для того чтобы вычислить expected в testReverse
+    //??? ???? ????? ????????? expected ? testReverse
     private String[] reverse(String[] arr){
         String[]result = new String[arr.length];
         for (int i=0;i<arr.length;i++){
@@ -223,10 +223,10 @@ public class TestMain {
             System.out.println("TEST PASSED "+Arrays.toString(input)+"-> reversed correctly");
         }catch (Exception e){
             System.out.println("TEST FAILED "+e.getClass().getSimpleName()+"-"+e.getMessage());
-            fail("Не получилось");
+            fail("?? ??????????");
         }
     }
-    //генерация для теста calcAverage
+    //????????? ??? ????? calcAverage
     private List<Integer> generateRandomList(int size){
         List<Integer> list = new ArrayList<>();
         for(int i = 0; i<size;i++){

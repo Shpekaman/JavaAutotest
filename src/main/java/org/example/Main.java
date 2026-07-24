@@ -22,14 +22,14 @@ public class Main {
 
 
     }
-// условная логика
+// ???????? ??????
     public static boolean isEven(int n){
         return n % 2 ==0;
     }
 
     public static String checkAccess(int age){
         if(age<0){
-            return ("Мы принимаем только положительные числа");
+            return ("?? ????????? ?????? ????????????? ?????");
         }
         if(age>=18){
             return "Allowed";
@@ -42,7 +42,7 @@ public class Main {
     }
     public static String getGrade(int score){
         if(score<0||score>100){
-            return "Введите что нибудь от 0 до 100";
+            return "??????? ??? ?????? ?? 0 ?? 100";
         }
         if(score>=81) return "A";
         if(score>=61) return "B";
@@ -50,13 +50,13 @@ public class Main {
         if(score>=21) return "D";
         return "E";
     }
-    //циклы
+    //?????
     public static String blastOff(int start){
         if(start<0){
-            return ("Мы принимаем только положительные числа");
+            return ("?? ????????? ?????? ????????????? ?????");
         }
         if(start==0){
-            return "Поехали!";
+            return "???????!";
         }
         StringBuilder result = new StringBuilder();
         for(int i=start; i>=1; i--){
@@ -65,14 +65,14 @@ public class Main {
                 result.append(" ");
             }
         }
-        result.append(" Поехали!");
+        result.append(" ???????!");
         return result.toString();
 
 
     }
     public static int sumToN(int n){
         if(n<0){
-            System.out.println("Мы принимаем только положительные числа");
+            System.out.println("?? ????????? ?????? ????????????? ?????");
         }
         int result= 0;
         for(int i = 1; i<=n; i++){
@@ -92,7 +92,7 @@ public class Main {
 
     public static String getEvenInRange(int start,int end){
         if(start>end){
-            return "Айа яй";
+            return "??? ??";
         }
         StringBuilder result = new StringBuilder();
         for (int i = start; i<=end;i++){
@@ -104,7 +104,7 @@ public class Main {
     }
 
 
-    //массивы
+    //???????
     public static int findMax(int[] arr){
         int max = arr[0];
         for(int i = 1;i< arr.length;i++){
