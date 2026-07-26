@@ -23,24 +23,13 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-    finalizedBy("testIsOver")
 }
 
-
-tasks.register("runAllTest"){
-    description="Запускает все тесты"
+tasks.register("runAllTest") {
     group = "verification"
-}
-tasks.named ("runAllTest"){
-    dependsOn("test")
-    dependsOn("testIsOver")
-}
-
-
-tasks.register("testIsOver") {
-    group = "verification"
+    dependsOn("clean","test")
     doLast {
-    println("Test run is Over")
+        println("Test run is Over")
     }
 }
 

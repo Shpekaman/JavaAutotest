@@ -1,6 +1,8 @@
-import org.example.Main;
+import org.example.TestMethods;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.api.extension.*;
 
@@ -29,18 +31,20 @@ public class TestMain {
         System.out.println("=================");
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("random")
     void testIsEven(){
         int number = random.nextInt(0,101);
-        boolean result = Main.isEven(number);
+        boolean result = TestMethods.isEven(number);
         System.out.println("isEven("+ number + ")=" + result);
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource("random")
     void testCheckAccess(){
         for(int i=0;i<20;i++){
             int age = random.nextInt(100);
-            String result = Main.checkAccess(age);
+            String result = TestMethods.checkAccess(age);
             System.out.println("checkAccess("+age+")="+ result);
 
             if (age<18) {
@@ -51,17 +55,18 @@ public class TestMain {
         }
     }
 
-    @Test
+    @ParameterizedTest
+    @CsvSource({"-4","-3","-2","-1","0","1","2","3","4","5"})
     void testIsPositive(){
         int number = random.nextInt(-100,101);
-        boolean result = Main.isPositive(number);
+        boolean result = TestMethods.isPositive(number);
         System.out.println("isPositive("+ number + ")=" + result);
     }
 
     @ParameterizedTest
     @MethodSource("random")
     void testGetGrade(int score) {
-        String result = Main.getGrade(score);
+        String result = TestMethods.getGrade(score);
         System.out.println("getGrade(" + score + ")="+ result);
 
         assertTrue(score>=0 && score<=100);
@@ -91,10 +96,10 @@ public class TestMain {
         int number = random.nextInt(-5,5);
         String expected;
         if(number<0){
-            expected="?? ????????? ?????? ????????????? ?????";
+            expected="Только положительные";
         }
         else if(number==0){
-            expected="???????!";
+            expected="Поехали!";
         }else {
             StringBuilder result = new StringBuilder();
             for (int i = number; i >= 1; i--) {
@@ -103,10 +108,10 @@ public class TestMain {
                     result.append(" ");
                 }
             }
-            result.append(" ???????!");
+            result.append(" Поехали!");
             expected=result.toString();
         }
-        String actual = Main.blastOff(number);
+        String actual = TestMethods.blastOff(number);
         assertEquals(expected,actual);
         System.out.println(actual);
         System.out.println(expected);
@@ -129,11 +134,11 @@ public class TestMain {
             expected = result;
             System.out.println(expected);
         }
-        Integer actual = Main.sumToN(number);
+        Integer actual = TestMethods.sumToN(number);
         assertEquals(expected,actual);
     }
 
-    //??? ??????? ? testHasBug ? ??? testReverse
+    //Генарация для testHasBug и testReverse
     public static String[] generateRandomMessages(int size){
         String[]possibleMessages = {"Bug","Fix","Feature","Hello","Test","Bububu","Tututu"};
 
@@ -144,7 +149,7 @@ public class TestMain {
         }
         return messages;
     }
-    //??? ???????? ?? ????? Bug ? ???????
+    //проверка на слово Bug
     private boolean containsBug(String[] messages){
         for(String msg:messages){
             if("Bug".equals(msg)) return true;
@@ -155,7 +160,7 @@ public class TestMain {
     @RepeatedTest(5)
     void testHasBug(){
         String[]messages= generateRandomMessages(10);
-        boolean actual = Main.hasBug(messages);
+        boolean actual = TestMethods.hasBug(messages);
         boolean expected = containsBug(messages);
 
         if(expected == actual){
@@ -170,12 +175,12 @@ public class TestMain {
     void testGetEvenInRange(){
         int number1 = random.nextInt(0,101);
         int number2 = random.nextInt(0,101);
-        String result = Main.getEvenInRange(number1,number2);
+        String result = TestMethods.getEvenInRange(number1,number2);
         System.out.println("getEvenInRange " + "first number: "+number1+" second number: "+number2);
         System.out.println(result);
     }
 
-    //??? ??????? testFindMax
+    //генерация массива testFindMax
     private int[] generateRandomArray(int size){
 
         int[] arr = new int[size];
@@ -184,7 +189,7 @@ public class TestMain {
         }
         return arr;
     }
-    //??? ?????????? Max ? Find Max
+    //поиск Max в Find Max
     private int calculateMax(int []arr){
         int max = arr[0];
         for(int i=1;i< arr.length;i++){
@@ -192,11 +197,11 @@ public class TestMain {
         }
         return max;
     }
-    @Test
+    @RepeatedTest(5)
     void testFindMax(){
         int[] arr = generateRandomArray(10);
         int expected = calculateMax(arr);
-        int actual = Main.findMax(arr);
+        int actual = TestMethods.findMax(arr);
         if(expected == actual){
             System.out.println("TEST PASSED: findMax("+ Arrays.toString(arr)+")="+actual);
         }else{
@@ -204,7 +209,7 @@ public class TestMain {
             fail("Max mismatch");
         }
     }
-    //??? ???? ????? ????????? expected ? testReverse
+    //Генерация для expected в testReverse
     private String[] reverse(String[] arr){
         String[]result = new String[arr.length];
         for (int i=0;i<arr.length;i++){
@@ -218,15 +223,15 @@ public class TestMain {
         String[]expected = reverse(input);
 
         try {
-            String[]actual= Main.reverse(input);
+            String[]actual= TestMethods.reverse(input);
             assertArrayEquals(expected,actual);
             System.out.println("TEST PASSED "+Arrays.toString(input)+"-> reversed correctly");
         }catch (Exception e){
             System.out.println("TEST FAILED "+e.getClass().getSimpleName()+"-"+e.getMessage());
-            fail("?? ??????????");
+            fail("WRONG!");
         }
     }
-    //????????? ??? ????? calcAverage
+    //генерация для calcAverage
     private List<Integer> generateRandomList(int size){
         List<Integer> list = new ArrayList<>();
         for(int i = 0; i<size;i++){
@@ -234,6 +239,7 @@ public class TestMain {
         }
         return list;
     }
+    //считаем среднее
     private int calcAverageManually(List<Integer> list){
         int sum = 0;
         for (int num:list){
@@ -245,7 +251,7 @@ public class TestMain {
     void testCalcAverage(){
         List<Integer> list = generateRandomList(10);
         int expected = calcAverageManually(list);
-        int actual = Main.calcAverage(list);
+        int actual = TestMethods.calcAverage(list);
         if(expected == actual){
             System.out.println("TEST PASSED: "+ list +"-> average"+actual);
         }else{
@@ -257,7 +263,7 @@ public class TestMain {
     @Test
     void testRemoveSpecificName(){
         List<String>input = Arrays.asList("Alice","Bob","Michael");
-        List<String>result= Main.removeSpecificName(input,"Alice");
+        List<String>result= TestMethods.removeSpecificName(input,"Alice");
         assertEquals(Arrays.asList("Bob","Michael"), result);
     }
 
