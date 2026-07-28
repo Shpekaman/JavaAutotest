@@ -12,7 +12,7 @@ public class TestMethods {
         if(age<0){
             return ("Сначала надо родится");
         }
-        if(age>=18){
+        if(age>18){
             return "Allowed";
         }else{
             return "Denied";
@@ -82,7 +82,10 @@ public class TestMethods {
         StringBuilder result = new StringBuilder();
         for (int i = start; i<=end;i++){
             if(i%2==0){
-                result.append(i).append(" ");
+                if (result.length() > 0) {
+                    result.append(' ');
+                }
+                result.append(i);
             }
         }
         return result.toString();

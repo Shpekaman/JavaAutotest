@@ -47,7 +47,7 @@ public class TestMain {
             String result = TestMethods.checkAccess(age);
             System.out.println("checkAccess("+age+")="+ result);
 
-            if (age<18) {
+            if (age<=18) {
                 assertEquals("Denied", result);
             } else {
                 assertEquals("Allowed", result);
