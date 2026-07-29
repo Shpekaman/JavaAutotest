@@ -20,7 +20,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:2.20.1")
 }
 
-
+//Задача №1 создать две задачи одна запускает все тесты, вторая выводит Test run is over и запскается после завершения первой
 tasks.test {
     useJUnitPlatform()
 }

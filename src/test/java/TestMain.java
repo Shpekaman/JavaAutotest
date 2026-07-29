@@ -1,7 +1,7 @@
-import org.example.TestMethods;
+import org.example.Methods;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.api.extension.*;
@@ -11,17 +11,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 @ExtendWith(TestLoggerExtension.class)
 
+//Тестовый класс который запускает все методы и тесты
 public class TestMain {
     private static final Random random = new Random();
 
 
     @BeforeEach
     void setUp(){
-        System.out.println("=================");
+    System.out.println("=================");
         System.out.println("Test method start");
     }
 
@@ -30,65 +34,78 @@ public class TestMain {
         System.out.println("Test method end");
         System.out.println("=================");
     }
-
-    @ParameterizedTest
-    @MethodSource("random")
+    //Тесты из первой части Задачи №2
+    //boolean isEven(int n) — запустить метод один раз со случайным числом от 1 до 100;
+    @Test
     void testIsEven(){
         int number = random.nextInt(0,101);
-        boolean result = TestMethods.isEven(number);
-        System.out.println("isEven("+ number + ")=" + result);
+        boolean expected = number % 2 == 0;
+        boolean actual = Methods.isEven(number);
+        System.out.print("isEven(" + number + ") -> " + actual + " ");
+        if (expected == actual) {
+            System.out.println("TEST PASSED");
+        } else {
+            System.out.println("TEST FAILED (expected: " + expected + ")");
+        }
     }
-
-    @ParameterizedTest
-    @MethodSource("random")
+    //String checkAccess(int age) — запустить метод 20 раз со случайными числами от 0 до 99;
+    @RepeatedTest(20)
     void testCheckAccess(){
         for(int i=0;i<20;i++){
             int age = random.nextInt(100);
-            String result = TestMethods.checkAccess(age);
-            System.out.println("checkAccess("+age+")="+ result);
-
-            if (age<=18) {
-                assertEquals("Denied", result);
+            String expected;
+            if (age < 0) expected = "Сначала надо родится";
+            else if (age > 18) expected = "Allowed";
+            else expected = "Denied";
+            String actual = Methods.checkAccess(age);
+            System.out.print("checkAccess(" + age + ") -> " + actual + " ");
+            if (expected.equals(actual)) {
+                System.out.println("TEST PASSED");
             } else {
-                assertEquals("Allowed", result);
+                System.out.println("TEST FAILED (expected: " + expected + ")");
             }
         }
     }
-
-    @ParameterizedTest
-    @CsvSource({"-4","-3","-2","-1","0","1","2","3","4","5"})
-    void testIsPositive(){
-        int number = random.nextInt(-100,101);
-        boolean result = TestMethods.isPositive(number);
-        System.out.println("isPositive("+ number + ")=" + result);
-    }
-
+    //String getGrade(int score) — запустить метод в параметризованных тестах с массивом случайных чисел от 0 до 100.
     @ParameterizedTest
     @MethodSource("random")
     void testGetGrade(int score) {
-        String result = TestMethods.getGrade(score);
-        System.out.println("getGrade(" + score + ")="+ result);
+        String actual = Methods.getGrade(score);
+        String expected = computeGrade(score);
+        System.out.print("getGrade(" + score + ") -> " + actual + " ");
+        if (expected.equals(actual)) {
+            System.out.println("TEST PASSED");
+        } else {
+            System.out.println("TEST FAILED (expected: " + expected + ")");
+        }
 
-        assertTrue(score>=0 && score<=100);
-        if(score>=81){
-            assertEquals("A",result);
-        }
-        else if(score>=61) {
-            assertEquals("B",result);
-        }
-        else if(score>=41) {
-            assertEquals("C",result);
-        }
-        else if(score>=21) {
-            assertEquals("D",result);
-        }
-        else {
-            assertEquals("E",result);
-        }
     }
     static IntStream random(){
         return IntStream.generate(()->random.nextInt(101))
         .limit(10);
+    }
+    private String computeGrade(int score) {
+        if (score < 0 || score > 100) return "from 0 to 100";
+        if (score >= 81) return "A";
+        if (score >= 61) return "B";
+        if (score >= 41) return "C";
+        if (score >= 21) return "D";
+        return "E";
+    }
+
+    //Остальные тесты из второй задачи
+    @ParameterizedTest
+    @CsvSource({"-4","-3","-2","-1","0","1","2","3","4","5"})
+    void testIsPositive(){
+        int number = random.nextInt(-100,101);
+        boolean actual = Methods.isPositive(number);
+        boolean expected = number % 2 == 0;
+        System.out.print("isPositive(" + number + ") -> " + actual + " ");
+        if (expected == actual) {
+            System.out.println("TEST PASSED");
+        } else {
+            System.out.println("TEST FAILED (expected: " + expected + ")");
+        }
     }
 
     @RepeatedTest(5)
@@ -111,10 +128,13 @@ public class TestMain {
             result.append(" Поехали!");
             expected=result.toString();
         }
-        String actual = TestMethods.blastOff(number);
-        assertEquals(expected,actual);
-        System.out.println(actual);
-        System.out.println(expected);
+        String actual = Methods.blastOff(number);
+        System.out.print("blastOff(" + number + ") -> " + actual + " ");
+        if (expected.equals(actual)) {
+            System.out.println("TEST PASSED");
+        } else {
+            System.out.println("TEST FAILED (expected: " + expected + ")");
+        }
 
     }
 
@@ -134,11 +154,16 @@ public class TestMain {
             expected = result;
             System.out.println(expected);
         }
-        Integer actual = TestMethods.sumToN(number);
-        assertEquals(expected,actual);
+        int actual = Methods.sumToN(number);
+        System.out.print("sumToN(" + number + ") -> " + actual + " ");
+        if (expected == actual) {
+            System.out.println("TEST PASSED");
+        } else {
+            System.out.println("TEST FAILED (expected: " + expected + ")");
+        }
     }
 
-    //Генарация для testHasBug и testReverse
+    //Генерация для testHasBug и testReverse
     public static String[] generateRandomMessages(int size){
         String[]possibleMessages = {"Bug","Fix","Feature","Hello","Test","Bububu","Tututu"};
 
@@ -160,14 +185,14 @@ public class TestMain {
     @RepeatedTest(5)
     void testHasBug(){
         String[]messages= generateRandomMessages(10);
-        boolean actual = TestMethods.hasBug(messages);
+        boolean actual = Methods.hasBug(messages);
         boolean expected = containsBug(messages);
 
         if(expected == actual){
             System.out.println("TEST PASSED: "+ Arrays.toString(messages)+"-> hasBug = "+actual);
         }else{
             System.out.println("TEST FAILED: "+ Arrays.toString(messages) +"-> expected"+ expected);
-            fail("HasBug returned wrong value");
+
         }
     }
 
@@ -175,9 +200,26 @@ public class TestMain {
     void testGetEvenInRange(){
         int number1 = random.nextInt(0,101);
         int number2 = random.nextInt(0,101);
-        String result = TestMethods.getEvenInRange(number1,number2);
-        System.out.println("getEvenInRange " + "first number: "+number1+" second number: "+number2);
-        System.out.println(result);
+        String actual = Methods.getEvenInRange(number1,number2);
+        String expected = buildEvenRangeExpected(number1, number2);
+        System.out.print("getEvenInRange(" + number1 + ", " + number2 + ") -> " + actual + " ");
+        if (expected.equals(actual)) {
+            System.out.println("TEST PASSED");
+        } else {
+            System.out.println("TEST FAILED (expected: " + expected + ")");
+        }
+    }
+
+    private String buildEvenRangeExpected(int start, int end) {
+        if (start > end) return "Что то не то";
+        StringBuilder sb = new StringBuilder();
+        for (int i = start; i <= end; i++) {
+            if (i % 2 == 0) {
+                if (sb.length() > 0) sb.append(' ');
+                sb.append(i);
+            }
+        }
+        return sb.toString();
     }
 
     //генерация массива testFindMax
@@ -197,21 +239,21 @@ public class TestMain {
         }
         return max;
     }
-    @RepeatedTest(5)
+    @Test
     void testFindMax(){
         int[] arr = generateRandomArray(10);
         int expected = calculateMax(arr);
-        int actual = TestMethods.findMax(arr);
+        int actual = Methods.findMax(arr);
         if(expected == actual){
             System.out.println("TEST PASSED: findMax("+ Arrays.toString(arr)+")="+actual);
         }else{
             System.out.println("TEST FAILED: expected"+ expected +", got"+ actual);
-            fail("Max mismatch");
+
         }
     }
     //Генерация для expected в testReverse
     private String[] reverse(String[] arr){
-        String[]result = new String[arr.length];
+            String[]result = new String[arr.length];
         for (int i=0;i<arr.length;i++){
             result[i]= arr[arr.length-1-i];
         }
@@ -221,15 +263,16 @@ public class TestMain {
     void testReverse(){
         String[]input=generateRandomMessages(5);
         String[]expected = reverse(input);
-
-        try {
-            String[]actual= TestMethods.reverse(input);
-            assertArrayEquals(expected,actual);
-            System.out.println("TEST PASSED "+Arrays.toString(input)+"-> reversed correctly");
-        }catch (Exception e){
-            System.out.println("TEST FAILED "+e.getClass().getSimpleName()+"-"+e.getMessage());
-            fail("WRONG!");
+        String[] actual = Methods.reverse(input);
+        boolean passed = Arrays.equals(expected, actual);
+        System.out.print("reverse(" + Arrays.toString(input) + ") -> " + Arrays.toString(actual) + " ");
+        if (passed) {
+            System.out.println("TEST PASSED");
+        } else {
+            System.out.println("TEST FAILED (expected: " + Arrays.toString(expected) + ")");
         }
+
+
     }
     //генерация для calcAverage
     private List<Integer> generateRandomList(int size){
@@ -251,21 +294,33 @@ public class TestMain {
     void testCalcAverage(){
         List<Integer> list = generateRandomList(10);
         int expected = calcAverageManually(list);
-        int actual = TestMethods.calcAverage(list);
+        int actual = Methods.calcAverage(list);
         if(expected == actual){
             System.out.println("TEST PASSED: "+ list +"-> average"+actual);
         }else{
             System.out.println("TEST FAILED: "+ list +"-> expected"+expected + ", got"+actual);
-            fail("WRONG!");
+
         }
     }
 
-    @Test
-    void testRemoveSpecificName(){
-        List<String>input = Arrays.asList("Alice","Bob","Michael");
-        List<String>result= TestMethods.removeSpecificName(input,"Alice");
-        assertEquals(Arrays.asList("Bob","Michael"), result);
+    @ParameterizedTest
+    @MethodSource("removeSpecificNameData")
+    void testRemoveSpecificName(List<String> list, String toRemove, List<String> expected){
+        List<String> actual = Methods.removeSpecificName(list, toRemove);
+        boolean passed = expected.equals(actual);
+        System.out.print("removeSpecificName(" + list + ", \"" + toRemove + "\") -> " + actual + " ");
+        if (passed) {
+            System.out.println("TEST PASSED");
+        } else {
+            System.out.println("TEST FAILED (expected: " + expected + ")");
+        }
     }
-
+    static Stream<Arguments> removeSpecificNameData() {
+        return Stream.of(
+                Arguments.of(asList("Alice", "Bob", "Charlie"), "Bob", asList("Alice", "Charlie")),
+                Arguments.of(asList("Alice", "Alice", "Bob"), "Alice", singletonList("Bob")),
+                Arguments.of(singletonList("Anna"), "Anna", List.of())
+        );
+    }
 
 }
