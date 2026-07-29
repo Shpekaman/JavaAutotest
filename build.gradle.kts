@@ -20,16 +20,22 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:2.20.1")
 }
 
-//«адача є1 создать две задачи одна запускает все тесты, втора€ выводит Test run is over и запскаетс€ после завершени€ первой
+//«адача є1 создать две задачи одна запускает все тесты, втора€ выводит Test run is over и запускаетс€ после завершени€ первой
 tasks.test {
     useJUnitPlatform()
 }
 
-tasks.register("runAllTest") {
-    group = "verification"
-    dependsOn("clean","test")
+
+tasks.register("runAllTests") {
+    dependsOn("clean","test","notifyAfterTests")
+    description = "«апускает все тесты проекта"
+}
+
+
+tasks.register("notifyAfterTests") {
+    dependsOn("test")
     doLast {
-        println("Test run is Over")
+        println("Test run is over")
     }
 }
 
