@@ -13,17 +13,12 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-
     testImplementation("io.rest-assured:rest-assured:5.4.0")
     testImplementation("io.rest-assured:json-path:5.4.0")
     // Source: https://mvnrepository.com/artifact/org.assertj/assertj-core
     testImplementation("org.assertj:assertj-core:3.27.7")
-
-
     implementation("com.fasterxml.jackson.core:jackson-core:2.20.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testImplementation("org.assertj:assertj-core:3.24.2")
 }
 
 //Задача №1 создать две задачи одна запускает все тесты, вторая выводит Test run is over и запускается после завершения первой
