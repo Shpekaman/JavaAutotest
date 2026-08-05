@@ -1,3 +1,4 @@
+import org.example.BadMethod;
 import org.example.Methods;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,14 +34,14 @@ public class Assertions {
     }
 
     //Assertion проверки
-
+    //Тест с ошибкой
     //boolean isEven(int n)
     @Tag("smoke")
     @RepeatedTest(10)
     void testIsEven() {
         int number = random.nextInt(0, 101);
         boolean expected = number % 2 == 0;
-        boolean actual = Methods.isEven(number);
+        boolean actual = BadMethod.isEven(number);
         System.out.print("isEven(" + number + ") -> " + actual + " \n");
         assertThat(actual)
                 .as("isEven("+number+") should be "+expected)
