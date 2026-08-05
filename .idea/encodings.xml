@@ -3,6 +3,7 @@
   <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="windows-1251">
     <file url="file://$PROJECT_DIR$/src/main/java/org/example/Main.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/org/example/Methods.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/test/java/Assertions.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/test/java/NewTest.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/test/java/TestMain.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/test/java/Zadacha.java" charset="UTF-8" />

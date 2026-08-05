@@ -1,3 +1,4 @@
+
 plugins {
     id("java")
 }
@@ -15,27 +16,50 @@ dependencies {
 
     testImplementation("io.rest-assured:rest-assured:5.4.0")
     testImplementation("io.rest-assured:json-path:5.4.0")
+    // Source: https://mvnrepository.com/artifact/org.assertj/assertj-core
+    testImplementation("org.assertj:assertj-core:3.27.7")
 
 
     implementation("com.fasterxml.jackson.core:jackson-core:2.20.1")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.assertj:assertj-core:3.24.2")
 }
 
 //«адача є1 создать две задачи одна запускает все тесты, втора€ выводит Test run is over и запускаетс€ после завершени€ первой
+
 tasks.test {
     useJUnitPlatform()
 }
 
-
-tasks.register("runAllTests") {
-    dependsOn("clean","test","notifyAfterTests")
-    description = "«апускает все тесты проекта"
+//только smoke
+tasks.register<Test>("smoke") {
+        useJUnitPlatform {
+        includeTags("smoke")
+    }
+    description = "«апуск тестового задани€ с тегом smoke"
 }
 
-
-tasks.register("notifyAfterTests") {
-    dependsOn("test")
+//все тесты
+tasks.register<Test>("AllTest") {
+    dependsOn(tasks.test)
+}
+//выводит Test run is over!
+tasks.register("notificationTask") {
     doLast {
-        println("Test run is over")
+        println("Test run is over!")
     }
+}
+//ѕрив€зывает notificationTask к задачам
+tasks.test {
+    finalizedBy("notificationTask")
+}
+
+tasks.named<Test>("smoke") {
+    finalizedBy("notificationTask")
+}
+
+tasks.named<Test>("AllTest") {
+    finalizedBy("notificationTask")
 }
 
