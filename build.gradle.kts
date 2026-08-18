@@ -18,6 +18,7 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/org.assertj/assertj-core
     testImplementation("org.assertj:assertj-core:3.27.7")
     implementation("com.fasterxml.jackson.core:jackson-core:2.20.1")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
 
 }
 
@@ -38,6 +39,12 @@ tasks.register<Test>("smoke") {
 //все тесты
 tasks.register<Test>("AllTest") {
     dependsOn(tasks.test)
+}
+tasks.register<Test>("apiTest") {
+    useJUnitPlatform {
+        includeTags("apiTest")
+    }
+            description = "«апускает все API-автотесты"
 }
 //выводит Test run is over!
 tasks.register("notificationTask") {
