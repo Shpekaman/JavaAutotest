@@ -56,7 +56,7 @@ public class ApiTest {
             .withContentType("application/json")
             .build();
 
-    private static final Random random = new Random();
+    static final Random random = new Random();
 
     //Удалить товар
     protected static void deleteGood(int id) {

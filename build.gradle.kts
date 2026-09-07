@@ -15,10 +15,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("io.rest-assured:rest-assured:5.5.6")
     testImplementation("io.rest-assured:json-path:5.4.0")
-    // Source: https://mvnrepository.com/artifact/org.assertj/assertj-core
     testImplementation("org.assertj:assertj-core:3.27.7")
     implementation("com.fasterxml.jackson.core:jackson-core:2.20.1")
     testImplementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    implementation("org.seleniumhq.selenium:selenium-java:4.47.0")
+    implementation("com.codeborne:selenide:7.18.1")
 
 }
 
