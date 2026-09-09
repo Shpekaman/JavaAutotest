@@ -43,7 +43,7 @@ public class DragAndDrop {
         empty.shouldBe(visible);
         String emptyText = empty.getText();
         assertThat(emptyText)
-                .as("Должно появиться уведомление об обработке заказа")
+                .as("Должно быть пусто")
                 .contains("Пусто");
     }
 
