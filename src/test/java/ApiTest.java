@@ -51,8 +51,9 @@ public class ApiTest {
     }
 
     //Для аутентификации
+    static Config config = Config.getInstance();
     static RequestSpecification authSpec = RestApiBuilder.getBuilder()
-            .addAuth("admin", "secret123")
+            .addAuth(config.getAdminLogin(), config.getAdminPassword())
             .withContentType("application/json")
             .build();
 
@@ -142,6 +143,52 @@ public class ApiTest {
         Response response = given()
                 .when()
                 .get("/goods/list")
+                .then()
+                .statusCode(200)
+                .extract().response();
+
+        List<Goods> goodsList = response.jsonPath().getList("goods", Goods.class);
+
+        assertThat(goodsList)
+                .as("Список товаров не должен быть пустым")
+                .isNotEmpty()
+                .anySatisfy(good -> {
+                    assertThat(good.id)
+                            .as("ID товара")
+                            .isEqualTo(id);
+                    assertThat(good.name)
+                            .as("Имя товара")
+                            .isEqualTo(name);
+                    assertThat(good.price)
+                            .as("Цена товара")
+                            .isEqualTo(price);
+                });
+
+        deleteGood(createResp.path("data.id"));
+    }
+//Проверка получения API из конфига
+    @Test
+    public void addGoodsFromConfig() {
+        String name = config.getGoodName();
+        float price = (float) config.getGoodPrice();
+
+
+
+        Response createResp = given()
+                .spec(authSpec)
+                .body(new Goods(name, price))
+                .when()
+                .post(config.getAddApiUrl())
+                .then()
+                .statusCode(200)
+                .extract().response();
+
+        int id = createResp.path("data.id");
+        assertThat(id).as("ID созданного товара не должен быть null").isNotNull();
+
+        Response response = given()
+                .when()
+                .get(config.getListApiUrl())
                 .then()
                 .statusCode(200)
                 .extract().response();
