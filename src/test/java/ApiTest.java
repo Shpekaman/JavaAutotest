@@ -2,6 +2,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import io.qameta.allure.Step;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -60,6 +61,7 @@ public class ApiTest {
     static final Random random = new Random();
 
     //Удалить товар
+    @Step("API: удалить товар id={id} через DELETE /goods/{id}")
     protected static void deleteGood(int id) {
         given()
                 .spec(authSpec)
@@ -70,6 +72,7 @@ public class ApiTest {
     }
 
     @Test
+    @Step("API: получить список товаров и проверить, что он пуст")
     public void getGoodsList() {
         given()
                 .contentType(ContentType.JSON)
@@ -81,6 +84,7 @@ public class ApiTest {
     }
 
     @Test
+    @Step("API: получить список товаров через RequestSpecification и проверить, что он пуст")
     public void getGoodsListUsingRequestSpecification() {
         RequestSpecification spec = new RequestSpecBuilder()
                 .setContentType(ContentType.JSON)
@@ -95,6 +99,7 @@ public class ApiTest {
     }
 
     @Test
+    @Step("API: добавить товар и проверить его в списке")
     public void addGoods() {
         String name = "good_" + UUID.randomUUID();
         float price = random.nextFloat(100);
@@ -124,6 +129,7 @@ public class ApiTest {
     }
 
     @Test
+    @Step("API: добавить товар и проверить атрибуты через AssertJ")
     public void addGoods2() {
         String name = "good_" + UUID.randomUUID().toString();
         float price = random.nextFloat(100);
@@ -168,6 +174,7 @@ public class ApiTest {
     }
 //Проверка получения API из конфига
     @Test
+    @Step("API: добавить товар с параметрами из конфига и проверить его в списке")
     public void addGoodsFromConfig() {
         String name = config.getGoodName();
         float price = (float) config.getGoodPrice();

@@ -1,14 +1,23 @@
 
 plugins {
     id("java")
+    id("io.qameta.allure") version "2.12.0"
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 repositories {
     mavenCentral()
 }
+
+val aspectjweaver: Configuration by configurations.creating
 
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
@@ -21,23 +30,45 @@ dependencies {
     implementation("org.seleniumhq.selenium:selenium-java:4.47.0")
     implementation("com.codeborne:selenide:7.18.1")
 
+    testImplementation("io.qameta.allure:allure-junit5:2.29.0")
+    testImplementation("io.qameta.allure:allure-selenide:2.29.0")
+    testImplementation("io.qameta.allure:allure-rest-assured:2.29.0")
+    testImplementation("io.qameta.allure:allure-java-commons:2.29.0")
+    aspectjweaver("org.aspectj:aspectjweaver:1.9.22.1")
 }
 
-//Задача №1 создать две задачи одна запускает все тесты, вторая выводит Test run is over и запускается после завершения первой
+allure {
+    version.set("2.29.0")
+}
+
+//РћР±С‰Р°СЏ РЅР°СЃС‚СЂРѕР№РєР° РґР»СЏ РІСЃРµС… С‚РµСЃС‚РѕРІС‹С… Р·Р°РґР°С‡: Allure-results Рё javaagent РґР»СЏ @Step
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+    systemProperty("allure.results.directory", layout.buildDirectory.dir("allure-results").get().asFile.absolutePath)
+    doFirst {
+        jvmArgs("-javaagent:${aspectjweaver.resolve().first()}")
+    }
+}
+
+
 
 tasks.test {
     useJUnitPlatform()
 }
 
-//только smoke
+//smoke
 tasks.register<Test>("smoke") {
         useJUnitPlatform {
         includeTags("smoke")
     }
-    description = "Запуск тестового задания с тегом smoke"
+    description = "smoke"
 }
 
-//все тесты
+
 tasks.register<Test>("AllTest") {
     dependsOn(tasks.test)
 }
@@ -45,15 +76,15 @@ tasks.register<Test>("apiTest") {
     useJUnitPlatform {
         includeTags("apiTest")
     }
-            description = "Запускает все API-автотесты"
+            description = "API"
 }
-//выводит Test run is over!
+
 tasks.register("notificationTask") {
     doLast {
         println("Test run is over!")
     }
 }
-//Привязывает notificationTask к задачам
+
 tasks.test {
     finalizedBy("notificationTask")
 }

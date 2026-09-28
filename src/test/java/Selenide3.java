@@ -1,7 +1,9 @@
 import java.util.*;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.openqa.selenium.Alert;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -35,6 +37,7 @@ public class Selenide3 {
         }
 
         @AfterEach
+        @Step("Бизнес-шаг: очистка — удалить созданные тестом товары")
         public void tearDown() {
             Cookies adminCookies = getAdminCookies();
             for (Long id : createdProductIds) {
@@ -49,6 +52,7 @@ public class Selenide3 {
             createdProductIds.clear();
         }
 
+        @Step("UI: вход в админку")
         private void loginAdmin() {
             open(BASE_URL + "/login");
             $("#username").setValue(ADMIN_LOGIN);
@@ -57,6 +61,7 @@ public class Selenide3 {
             $("#n-name").shouldBe(visible);
         }
 
+        @Step("API: получить куки администратора через POST /login")
         private Cookies getAdminCookies() {
             return given()
                     .formParam("username", ADMIN_LOGIN)
@@ -68,6 +73,7 @@ public class Selenide3 {
         }
 
 //Обращение к API
+    @Step("API: создать товар '{name}' с ценой {price} через POST /goods/add")
     private long addGoods(String name, int price) {
 
         Response createResp = given()
@@ -85,6 +91,7 @@ public class Selenide3 {
 
     }
 
+        @Step("UI: открыть корзину")
         private void openCart() {
             $("#open-cart-btn").click();
             sleep(500);
@@ -93,6 +100,7 @@ public class Selenide3 {
 
 
         @Test
+        @Step("UI-тест: три товара в корзину, оплата, проверка уведомления")
         public void addThreeItemsAndPay() {
             long productId = addGoods("Тест_корзина_3шт", 50);
 
@@ -112,13 +120,12 @@ public class Selenide3 {
             SelenideElement toast = $("#toast-container > div:nth-child(2)");
             toast.shouldBe(visible);
             String toastText = toast.getText();
-            assertThat(toastText)
-                    .as("Должно появиться уведомление об обработке заказа")
-                    .contains("Заказ принят в обработку!");
+            $(toastText).should(Condition.text("Заказ принят в обработку!"));
 
         }
 
         @Test
+        @Step("UI-тест: несколько товаров — проверка корректности общей цены")
         public void addItemsCheckPrice() {
             long productA = addGoods("Товар_А_проверка_суммы", 75);
             long productB = addGoods("Товар_Б_проверка_суммы", 120);
@@ -141,6 +148,7 @@ public class Selenide3 {
         }
 
         @Test
+        @Step("UI-тест: вход в админку и добавление товара — проверка уведомления")
         public void AddProductNotification() {
             loginAdmin();
 
@@ -180,6 +188,7 @@ public class Selenide3 {
         }
 
         @Test
+        @Step("UI-тест: редактирование товара и проверка изменений на витрине")
         public void editProduct() {
             String originalName = "Продукт ДО";
             int originalPrice = 100;

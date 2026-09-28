@@ -1,3 +1,4 @@
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ public class Selenium {
             }
         }
 
+        @Step("UI: вход администратора")
         private void loginAdmin() {
             browser.get(BASE_URL + "/login");
             wait.until(ExpectedConditions.presenceOfElementLocated(By.id("username")))
@@ -46,6 +48,7 @@ public class Selenium {
         }
 
     @Test
+    @Step("UI: добавить товар и проверить его на витрине")
     public void addProductAndVerify() {
         String productName = "Тестовый_товар";
         String productPrice = "999";
@@ -74,6 +77,7 @@ public class Selenium {
     }
 
     @Test
+    @Step("UI: добавить товар в корзину и проверить корзину")
     public void addProductToCartAndVerify() {
         String productName = "Стакан";
 
@@ -104,6 +108,7 @@ public class Selenium {
     }
 
     @Test
+    @Step("UI: вход с неверными логином и паролем — ошибка")
     public void loginWithWrongLogPass() {
         browser.get(BASE_URL + "/login");
 
@@ -124,6 +129,7 @@ public class Selenium {
     }
 //Считаю что корзина не должна быть пуста после рефреша
     @Test
+    @Step("UI: корзина сохраняется после обновления страницы")
     public void cartAfterRefresh() {
         String productName = "Стекло";
 

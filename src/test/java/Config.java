@@ -28,7 +28,8 @@ public class Config {
 
     private void printConfig() {
         System.out.println("BASE_URL: " + getProperty("BASE_URL"));
-        System.out.println("API_URL: " + getProperty("API_URL"));
+        System.out.println("ADD_API_URL: " + getProperty("ADD_API_URL"));
+        System.out.println("LIST_API_URL: " + getProperty("LIST_API_URL"));
         System.out.println("ELEMENT_TIMEOUT: " + getProperty("ELEMENT_TIMEOUT") + " seconds");
         System.out.println("LOG_LEVEL: " + getProperty("LOG_LEVEL"));
         System.out.println("NAME: " + getProperty("NAME"));

@@ -1,4 +1,5 @@
 import com.codeborne.selenide.Configuration;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Alert;
@@ -17,6 +18,7 @@ public class Selenide {
         Configuration.browserSize = "1920x1080";
     }
 
+    @Step("UI: вход в админку")
     private void loginAdmin() {
         open(BASE_URL + "/login");
         $("#username").setValue("admin");
@@ -26,6 +28,7 @@ public class Selenide {
     }
 
     @Test
+    @Step("UI-тест: добавить товар и проверить его на витрине")
     public void addProductAndVerify() {
         String productName = "Тестовый_товар";
         String productPrice = "999";
@@ -42,6 +45,7 @@ public class Selenide {
     }
 
     @Test
+    @Step("UI-тест: добавить товар в корзину и проверить его в корзине")
     public void addProductToCartAndVerify() {
         String productName = "Стакан";
 
@@ -55,6 +59,7 @@ public class Selenide {
     }
 
     @Test
+    @Step("UI-тест: вход с неверными учетными данными — проверка ошибки")
     public void loginWithWrongLogPass() {
         open(BASE_URL + "/login");
         $("#username").setValue("wrong_user");
@@ -65,6 +70,7 @@ public class Selenide {
     }
     //Считаю что корзина не должна быть пуста после рефреша
     @Test
+    @Step("UI-тест: корзина сохраняется после перезагрузки страницы")
     public void cartAfterRefresh() {
         String productName = "Стекло";
 
@@ -73,12 +79,13 @@ public class Selenide {
 
         String countBefore = $("#cart-count").getText();
 
-        executeJavaScript("location.reload()");
+        refresh();
 
         $("#cart-count").shouldHave(text(countBefore));
     }
 
     @Test
+    @Step("UI-тест: превышение лимита заказа — проверка алерта")
     public void orderShowsAlert() {
         open(BASE_URL + "/");
 

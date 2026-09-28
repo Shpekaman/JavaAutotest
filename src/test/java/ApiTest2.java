@@ -1,6 +1,7 @@
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -50,6 +51,7 @@ public class ApiTest2 {
     private static final Random random = new Random();
 
     //Сделать товар
+    @Step("API: создать товар '{name}' с ценой {price} через POST /goods/add")
     protected static Goods createGood(String name, float price) {
         Response response = given()
                 .spec(authSpec)
@@ -65,6 +67,7 @@ public class ApiTest2 {
         return good;
     }
     //Удалить товар
+    @Step("API: удалить товар id={id} через DELETE /goods/{id}")
     protected static void deleteGood(int id) {
         given()
                 .spec(authSpec)
@@ -76,6 +79,7 @@ public class ApiTest2 {
 
     //delete/goods/id
     @Test
+    @Step("API: удаление товара — 200 при удалении и 404 при повторном GET")
     void deleteGood200and404() {
 
         Goods created = createGood("GetTest", 50.0f);
@@ -108,6 +112,7 @@ public class ApiTest2 {
     }
 
     @Test
+    @Step("API: DELETE с некорректным id должен вернуть 400")
     void deleteGood400() {
         Response response = given()
                 .spec(authSpec)
@@ -122,6 +127,7 @@ public class ApiTest2 {
     }
 //какие-то корявые записи не удаляются из базы
     @Test
+    @Step("API: DELETE с проблемной записью — проверка ответа")
     void deleteGood500() {
         Response response = given()
                 .spec(authSpec)
@@ -140,6 +146,7 @@ public class ApiTest2 {
 //get/goods/id
     //Должно быть 200, но тут баг поэтому 500
     @Test
+    @Step("API: GET существующего товара и проверка его атрибутов")
     void getGood200() {
         Goods created = createGood("GetTest", 50.0f);
         Response response = given()
@@ -162,6 +169,7 @@ public class ApiTest2 {
 
     //Опять странное поведение должно быть 404, но здесь 500
     @Test
+    @Step("API: GET несуществующего товара должен вернуть 404")
     void getGood404() {
         Response response = given()
                 .spec(authSpec)
@@ -176,6 +184,7 @@ public class ApiTest2 {
     }
 
     @Test
+    @Step("API: GET с некорректным форматом id должен вернуть 400")
     void getGood400() {
         Response response = given()
                 .spec(authSpec)
@@ -191,6 +200,7 @@ public class ApiTest2 {
 
     //post/goods/add
     @Test
+    @Step("API: POST /goods/add с валидным телом должен вернуть 200")
     void addGoods200() {
 
         Response response = given()
@@ -210,6 +220,7 @@ public class ApiTest2 {
     }
 
     @Test
+    @Step("API: POST /goods/add с пустым телом должен вернуть 400")
     void addGoods400() {
 
         Response response = given()
@@ -227,6 +238,7 @@ public class ApiTest2 {
 
     //patch/goods/id
     @Test
+    @Step("API: PATCH товара — изменение имени и цены, проверка атрибутов")
     void patchGoods200() {
         Goods created = createGood("PatchTest", 30.0f);
         String newName = "UpdatedName";
@@ -252,6 +264,7 @@ public class ApiTest2 {
     }
 
     @Test
+    @Step("API: PATCH только имени товара — цена должна сохраниться")
     void patchGoodOnlyName200() {
         Goods created = createGood("PartialTest", 40.0f);
         String newName = "OnlyNameChanged";
@@ -277,6 +290,7 @@ public class ApiTest2 {
     }
 
     @Test
+    @Step("API: PATCH несуществующего товара должен вернуть 404")
     void patchGood404() {
         String json = "{\"name\": \"NonExist\"}";
         Response response = given()
@@ -292,6 +306,7 @@ public class ApiTest2 {
     }
 
     @Test
+    @Step("API: PATCH с некорректной ценой должен вернуть 400")
     void patchGood400() {
         Goods created = createGood("PatchInvalid", 10.0f);
         String json = "{\"price\": \"not-a-number\"}";

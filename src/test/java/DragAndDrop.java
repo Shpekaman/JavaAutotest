@@ -1,5 +1,6 @@
 import com.codeborne.selenide.DragAndDropOptions;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.interactions.Actions;
@@ -16,6 +17,7 @@ public class DragAndDrop {
         open("http://localhost:8080");
     }
 
+    @Step("UI: вход администратора")
     private void loginAdmin() {
 
         $("#username").setValue("admin");
@@ -25,6 +27,7 @@ public class DragAndDrop {
     }
 //Домашка тема 7
     @Test
+    @Step("UI: перетащить карточку в корзину drag-and-drop")
     public void dragAndDrop() {
         sleep(1000);
         firstCard.dragAndDrop(DragAndDropOptions.to(cartButton));
@@ -33,6 +36,7 @@ public class DragAndDrop {
 
 
     @Test
+    @Step("UI: добавить в корзину, удалить и проверить пустую корзину")
     public void addToCartThanDeleteAndVerify() {
         sleep(1000);
         firstCard.dragAndDrop(DragAndDropOptions.to(cartButton));

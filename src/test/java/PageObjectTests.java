@@ -1,4 +1,5 @@
 import com.codeborne.selenide.Configuration;
+import io.qameta.allure.Step;
 import io.restassured.http.Cookies;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -31,6 +32,7 @@ public class PageObjectTests {
     }
 
     @AfterEach
+    @Step("Бизнес-шаг: очистка — удалить созданные тестом товары")
     void tearDown() {
         try {
             Cookies cookies = getAdminCookies();
@@ -43,12 +45,14 @@ public class PageObjectTests {
         createdProductIds.clear();
     }
 
+    @Step("Бизнес-шаг: вход в админку")
     private void loginAdmin() {
         loginPage.open(config.getBaseUrl());
         new LoginPageAssert(loginPage).allElementsVisible();
         loginPage.login(config.getAdminLogin(), config.getAdminPassword());
     }
 
+    @Step("API: получить куки администратора через POST /login")
     private Cookies getAdminCookies() {
         return given()
                 .formParam("username", config.getAdminLogin())
@@ -57,6 +61,7 @@ public class PageObjectTests {
                 .then().extract().detailedCookies();
     }
 
+    @Step("API: создать товар '{name}' с ценой {price} через POST /goods/add")
     private long addGoodsViaApi(String name, int price) {
         ApiTest.Goods body = new ApiTest.Goods(name, price);
         Response resp = given().spec(ApiTest.authSpec)
@@ -71,12 +76,14 @@ public class PageObjectTests {
         return id;
     }
 
+    @Step("Бизнес-метод: сгенерировать уникальное имя товара на базе '{base}'")
     private static String unique(String base) {
         return base + "_" + System.nanoTime();
     }
 
     // 1 Три товара в корзину, оплата, проверка уведомления
     @Test
+    @Step("UI-тест: три товара в корзину, оплата и проверка уведомления")
     void addThreeItemsAndPay() {
         String name = unique("Тест_корзина_3шт");
         long id = addGoodsViaApi(name, 50);
@@ -101,6 +108,7 @@ public class PageObjectTests {
 
     // 2 Добавить разных товаров, проверка общей цены
     @Test
+    @Step("UI-тест: несколько разных товаров и проверка общей цены в корзине")
     void checkTotalPriceForMultipleItems() {
         String nameA = unique("Товар_А");
         String nameB = unique("Товар_Б");
@@ -121,6 +129,7 @@ public class PageObjectTests {
 
     // 3 Вход и добавление товара, проверка уведомления
     @Test
+    @Step("UI-тест: вход в админку, добавление товара, проверка уведомления")
     void addProductInAdmin() {
         loginAdmin();
 
@@ -133,6 +142,7 @@ public class PageObjectTests {
 
     // 4 Вход, редактирование товара, проверка
     @Test
+    @Step("UI-тест: вход в админку, редактирование товара и проверка изменений")
     void editProductInAdmin() {
         long ts = System.nanoTime();
         String before = "Продукт_ДО_" + ts;
